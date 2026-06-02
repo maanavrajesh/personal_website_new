@@ -1,0 +1,28 @@
+{
+  "name": "personal-website-new",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fontsource/familjen-grotesk": "latest",
+    "@fontsource/space-mono": "latest",
+    "framer-motion": "latest",
+    "next": "latest",
+    "qrcode.react": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "playwright": "^1.60.0",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}
