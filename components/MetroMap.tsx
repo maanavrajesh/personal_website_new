@@ -31,16 +31,16 @@ export function MetroMap({
 
   return (
     <section className="min-h-screen px-[4vw] py-6">
-      <div className="mb-4">
+      <div className="mb-5">
         <h1 className="text-6xl font-bold leading-none">{copy.title}</h1>
         <p className="mono mt-2 text-xs uppercase text-[var(--muted-ink)]">
           {copy.instructions}
         </p>
-        <div className="mt-4 flex max-w-5xl flex-wrap gap-2">
+        <div className="mt-5 flex max-w-[1180px] flex-wrap gap-[6px]">
           <button
             type="button"
             onClick={() => onLineSelect(null)}
-            className={`mono border border-[var(--ink)] px-3 py-2 text-[0.68rem] uppercase ${
+            className={`mono min-h-9 whitespace-nowrap border border-[var(--ink)] px-3 py-2 text-[0.68rem] uppercase leading-none ${
               selectedLineId === null ? "bg-[var(--ink)] text-[var(--board)]" : "bg-[var(--board)]"
             }`}
           >
@@ -51,7 +51,7 @@ export function MetroMap({
               key={line.id}
               type="button"
               onClick={() => onLineSelect(line.id)}
-              className={`mono inline-flex items-center gap-2 border border-[var(--ink)] px-3 py-2 text-[0.68rem] uppercase ${
+              className={`mono inline-flex min-h-9 items-center gap-2 whitespace-nowrap border border-[var(--ink)] px-3 py-2 text-[0.68rem] uppercase leading-none ${
                 selectedLineId === line.id
                   ? "bg-[var(--ink)] text-[var(--board)]"
                   : "bg-[var(--board)]"
@@ -66,11 +66,11 @@ export function MetroMap({
             </button>
           ))}
         </div>
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mono mt-4 flex w-fit items-center gap-2 border border-[var(--hairline)] bg-[var(--board)] px-2 py-1">
           <span className="mono inline-block bg-[var(--ink)] px-2 py-0.5 text-[0.6rem] font-bold uppercase text-[var(--paper)]">
             {copy.currentMarker}
           </span>
-          <span className="mono text-[0.68rem] uppercase text-[var(--muted-ink)]">
+          <span className="text-[0.68rem] uppercase leading-none text-[var(--muted-ink)]">
             {copy.currentMarkerLegend}
           </span>
         </div>
@@ -78,7 +78,7 @@ export function MetroMap({
 
       <div className="border border-[var(--ink)] bg-[var(--board)]">
         <svg
-          className="map-surface h-[calc(100vh-150px)] min-h-[560px] w-full cursor-default"
+          className="map-surface h-[calc(100vh-172px)] min-h-[620px] w-full cursor-default"
           viewBox={`${mapViewBox.x} ${mapViewBox.y} ${mapViewBox.width} ${mapViewBox.height}`}
           role="application"
           aria-label={copy.ariaLabel}
@@ -144,14 +144,19 @@ function StationNode({
   const labelDx = geometry.labelDx ?? 14;
   const labelDy = geometry.labelDy ?? -14;
   const labelAnchor = geometry.labelAnchor ?? "start";
-  const labelWidth = Math.max(72, station.label.length * 10 + 22);
+  const labelWidth = Math.max(72, station.label.length * (station.isPrimary ? 12 : 10) + 28);
+  const labelPlateHeight = station.isPrimary ? 34 : 28;
   const labelBoxX =
     labelAnchor === "end"
       ? labelDx - labelWidth - 8
       : labelAnchor === "middle"
         ? labelDx - labelWidth / 2
         : labelDx - 8;
-  const labelBoxY = labelDy - 24;
+  const labelPlateY = labelDy - labelPlateHeight / 2;
+  const labelTextX = labelBoxX + labelWidth / 2;
+  const labelTextY = labelPlateY + labelPlateHeight / 2 + 1;
+  const currentMarkerX = geometry.currentMarkerDx ?? radius + 10;
+  const currentMarkerY = geometry.currentMarkerDy ?? radius + 8;
   const copy = siteContent.map;
 
   function handleKeyDown(event: React.KeyboardEvent<SVGGElement>) {
@@ -189,9 +194,9 @@ function StationNode({
       />
       <rect
         x={labelBoxX}
-        y={labelBoxY}
+        y={labelPlateY}
         width={labelWidth}
-        height="34"
+        height={labelPlateHeight}
         fill="transparent"
         pointerEvents="all"
         aria-hidden="true"
@@ -221,13 +226,26 @@ function StationNode({
         );
       })}
       <circle r={station.isMarquee ? 4 : 3} fill="var(--ink)" />
+      <rect
+        className="station-label-plate"
+        x={labelBoxX}
+        y={labelPlateY}
+        width={labelWidth}
+        height={labelPlateHeight}
+        fill="var(--board)"
+        stroke="var(--hairline)"
+        strokeWidth="1"
+        pointerEvents="none"
+        aria-hidden="true"
+      />
       {station.isPrimary ? <PrimaryMarker x={radius + 12} y={-(radius + 42)} /> : null}
-      {station.isCurrent ? <CurrentMarker x={radius + 10} y={radius + 8} /> : null}
+      {station.isCurrent ? <CurrentMarker x={currentMarkerX} y={currentMarkerY} /> : null}
       <text
-        x={labelDx}
-        y={labelDy}
-        textAnchor={labelAnchor}
-        className={`mono pointer-events-none fill-[var(--ink)] font-bold uppercase ${
+        x={labelTextX}
+        y={labelTextY}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className={`station-label-text mono pointer-events-none fill-[var(--ink)] font-bold uppercase ${
           station.isPrimary ? "text-[19px]" : "text-[15px]"
         }`}
       >
@@ -260,6 +278,13 @@ function CurrentMarker({ x, y }: { x: number; y: number }) {
 }
 
 function MapBackground() {
+  const horizontalGridPath = [100, 210, 320, 430, 540, 650, 760]
+    .map((y) => `M80 ${y}H1200`)
+    .join("");
+  const verticalGridPath = [120, 320, 520, 720, 920, 1120]
+    .map((x) => `M${x} 70V780`)
+    .join("");
+
   return (
     <g aria-hidden="true">
       <rect
@@ -270,13 +295,13 @@ function MapBackground() {
         fill="var(--board)"
       />
       <path
-        d="M80 90H1120M80 190H1120M80 290H1120M80 390H1120M80 490H1120M80 590H1120M80 690H1120"
+        d={horizontalGridPath}
         fill="none"
         stroke="var(--hairline)"
         strokeWidth="1"
       />
       <path
-        d="M120 60V710M320 60V710M520 60V710M720 60V710M920 60V710M1080 60V710"
+        d={verticalGridPath}
         fill="none"
         stroke="var(--hairline)"
         strokeWidth="1"

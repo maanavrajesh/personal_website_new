@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { lines, type LineId } from "@/data/lines";
@@ -21,6 +21,8 @@ const lineCodes: Record<LineId, string> = {
   "off-hours": "OFF",
 };
 
+const INTRO_SESSION_KEY = "portfolio-intro-v1";
+
 const countryCards = [
   {
     id: "japan",
@@ -30,6 +32,9 @@ const countryCards = [
     nativeText: "小田急線 / 東京",
     detail: "Sakura transfer",
     className: "country-card-japan",
+    rotation: -4,
+    dropX: -80,
+    dropRotate: -18,
   },
   {
     id: "korea",
@@ -39,6 +44,9 @@ const countryCards = [
     nativeText: "서울 지하철",
     detail: "T-money pass",
     className: "country-card-korea",
+    rotation: 2,
+    dropX: 28,
+    dropRotate: 14,
   },
   {
     id: "copenhagen",
@@ -48,6 +56,9 @@ const countryCards = [
     nativeText: "København",
     detail: "M4 clean line",
     className: "country-card-copenhagen",
+    rotation: -1,
+    dropX: 90,
+    dropRotate: -11,
   },
   {
     id: "madrid",
@@ -57,6 +68,9 @@ const countryCards = [
     nativeText: "Metro de Madrid",
     detail: "Billete sencillo",
     className: "country-card-madrid",
+    rotation: 2.4,
+    dropX: -45,
+    dropRotate: 12,
   },
   {
     id: "singapore",
@@ -66,11 +80,40 @@ const countryCards = [
     nativeText: "新加坡 MRT",
     detail: "Tap in / tap out",
     className: "country-card-singapore",
+    rotation: -3,
+    dropX: 54,
+    dropRotate: -16,
   },
 ] as const;
 
 export function Ticket({ onEnter, reducedMotion }: TicketProps) {
   const content = siteContent.ticket;
+  const [introMode, setIntroMode] = useState<"pending" | "play" | "skip">("pending");
+
+  useEffect(() => {
+    const mediaReduced =
+      reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (mediaReduced) {
+      setIntroMode("skip");
+      return;
+    }
+
+    try {
+      if (window.sessionStorage.getItem(INTRO_SESSION_KEY) === "seen") {
+        setIntroMode("skip");
+        return;
+      }
+
+      window.sessionStorage.setItem(INTRO_SESSION_KEY, "seen");
+      setIntroMode("play");
+    } catch {
+      setIntroMode("play");
+    }
+  }, [reducedMotion]);
+
+  const introReady = introMode !== "pending";
+  const playIntro = introMode === "play" && !reducedMotion;
 
   return (
     <motion.section
@@ -80,14 +123,30 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
       exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.98 }}
       transition={{ duration: reducedMotion ? 0 : 0.42, ease: "easeOut" }}
     >
-      <div className="ticket-stack relative z-10 w-full max-w-[1080px]" aria-label="Transit ticket stack">
-        <div className="country-card-field" aria-hidden="true">
-          {countryCards.map((card, index) => (
-            <CountryCard key={card.id} card={card} index={index} />
-          ))}
-        </div>
+      {introReady ? (
+        <>
+          <ExpressTrainIntro playIntro={playIntro} />
 
-        <article className="ticket-main">
+          <div
+            className="ticket-stack relative z-10 w-full max-w-[1080px]"
+            aria-label="Transit ticket stack"
+          >
+            <div className="country-card-field" aria-hidden="true">
+              {countryCards.map((card, index) => (
+                <CountryCard key={card.id} card={card} index={index} playIntro={playIntro} />
+              ))}
+            </div>
+
+        <motion.article
+          className="ticket-main"
+          initial={playIntro ? { opacity: 0, y: 38, scale: 0.965 } : false}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            duration: playIntro ? 0.55 : 0,
+            delay: playIntro ? 0.28 : 0,
+            ease: "easeOut" as const,
+          }}
+        >
           <TicketTexture ink="#20150e" opacity="0.08" />
           <TicketCuts />
 
@@ -209,8 +268,10 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
               </div>
             </aside>
           </div>
-        </article>
-      </div>
+        </motion.article>
+          </div>
+        </>
+      ) : null}
     </motion.section>
   );
 }
@@ -218,12 +279,32 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
 function CountryCard({
   card,
   index,
+  playIntro,
 }: {
   card: (typeof countryCards)[number];
   index: number;
+  playIntro: boolean;
 }) {
   return (
-    <div className={`country-card country-card-${index + 1} ${card.className}`}>
+    <motion.div
+      className={`country-card country-card-${index + 1} ${card.className}`}
+      initial={
+        playIntro
+          ? {
+              opacity: 0,
+              x: card.dropX,
+              y: -230 - index * 18,
+              rotate: card.dropRotate,
+            }
+          : false
+      }
+      animate={{ opacity: 1, x: 0, y: 0, rotate: card.rotation }}
+      transition={{
+        duration: playIntro ? 0.7 : 0,
+        delay: playIntro ? 0.02 + index * 0.06 : 0,
+        ease: "easeOut" as const,
+      }}
+    >
       <TicketTexture ink="#20150e" opacity="0.08" />
       <div className="country-card-copy mono">
         <span>{card.city}</span>
@@ -237,7 +318,39 @@ function CountryCard({
         <span>{card.code.slice(0, 2)}</span>
       </div>
       <CountryMotif cardId={card.id} />
-    </div>
+    </motion.div>
+  );
+}
+
+function ExpressTrainIntro({ playIntro }: { playIntro: boolean }) {
+  if (!playIntro) return null;
+
+  return (
+    <motion.div
+      className="express-train-layer"
+      aria-hidden="true"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 1, 0] }}
+      transition={{ duration: 1.08, times: [0, 0.08, 0.78, 1] }}
+    >
+      <motion.div
+        className="express-train"
+        initial={{ x: "-38vw" }}
+        animate={{ x: "118vw" }}
+        transition={{ duration: 1.05, ease: "easeInOut" as const }}
+      >
+        <div className="express-train-cab" />
+        <div className="express-train-window express-train-window-1" />
+        <div className="express-train-window express-train-window-2" />
+        <div className="express-train-window express-train-window-3" />
+        <div className="express-train-door" />
+        <div className="express-train-stripe" />
+        <div className="express-train-wheel express-train-wheel-1" />
+        <div className="express-train-wheel express-train-wheel-2" />
+      </motion.div>
+      <span className="express-train-speedline express-train-speedline-1" />
+      <span className="express-train-speedline express-train-speedline-2" />
+    </motion.div>
   );
 }
 

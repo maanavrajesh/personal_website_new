@@ -9,38 +9,48 @@ export type StationGeometry = MapPoint & {
   labelDx?: number;
   labelDy?: number;
   labelAnchor?: "start" | "middle" | "end";
+  currentMarkerDx?: number;
+  currentMarkerDy?: number;
 };
 
 export const mapViewBox = {
   x: 0,
   y: 0,
-  width: 1180,
-  height: 760,
+  width: 1280,
+  height: 820,
 };
 
 export const stationGeometry: Record<string, StationGeometry> = {
   cmu: { x: 120, y: 378, labelDx: -12, labelDy: -24, labelAnchor: "end" },
-  "skills-hub": { x: 610, y: 390, labelDx: 0, labelDy: -42, labelAnchor: "middle" },
+  "skills-hub": { x: 610, y: 390, labelDx: -6, labelDy: -54, labelAnchor: "middle" },
   goldenlink: { x: 270, y: 500, labelDx: -22, labelDy: 32, labelAnchor: "end" },
-  "data-center-ticketing": { x: 500, y: 500, labelDx: -16, labelDy: 38, labelAnchor: "middle" },
+  "data-center-ticketing": {
+    x: 500,
+    y: 500,
+    labelDx: -16,
+    labelDy: 46,
+    labelAnchor: "middle",
+    currentMarkerDx: 32,
+    currentMarkerDy: -22,
+  },
   workbenchai: { x: 420, y: 330, labelDx: -16, labelDy: -24, labelAnchor: "middle" },
-  "vision-xi": { x: 650, y: 560, labelDx: 0, labelDy: 42, labelAnchor: "middle" },
+  "vision-xi": { x: 650, y: 560, labelDx: 0, labelDy: 48, labelAnchor: "middle" },
   "go-fraud-pipeline": { x: 790, y: 390, labelDx: 22, labelDy: -30, labelAnchor: "start" },
   privy: { x: 640, y: 220, labelDx: 16, labelDy: -28, labelAnchor: "start" },
   "metro-card-collecting": { x: 160, y: 650, labelDx: 0, labelDy: 34, labelAnchor: "middle" },
   "soccer-football": { x: 400, y: 650, labelDx: 0, labelDy: 34, labelAnchor: "middle" },
-  "world-travel": { x: 900, y: 650, labelDx: 0, labelDy: -38, labelAnchor: "middle" },
-  japan: { x: 1010, y: 120, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  "south-korea": { x: 1030, y: 180, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  denmark: { x: 1048, y: 240, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  norway: { x: 1058, y: 300, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  "spain-madrid": { x: 1064, y: 360, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  singapore: { x: 1058, y: 420, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  thailand: { x: 1048, y: 480, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  indonesia: { x: 1030, y: 540, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  mexico: { x: 1005, y: 605, labelDx: 18, labelDy: -26, labelAnchor: "start" },
-  "costa-rica": { x: 975, y: 660, labelDx: 18, labelDy: -28, labelAnchor: "start" },
-  canada: { x: 945, y: 690, labelDx: -14, labelDy: 30, labelAnchor: "end" },
+  "world-travel": { x: 915, y: 670, labelDx: -22, labelDy: -54, labelAnchor: "end" },
+  japan: { x: 1090, y: 115, labelDx: 26, labelDy: -16, labelAnchor: "start" },
+  "south-korea": { x: 1115, y: 180, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  denmark: { x: 1132, y: 250, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  norway: { x: 1142, y: 320, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  "spain-madrid": { x: 1148, y: 390, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  singapore: { x: 1142, y: 460, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  thailand: { x: 1132, y: 530, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  indonesia: { x: 1115, y: 600, labelDx: 26, labelDy: -8, labelAnchor: "start" },
+  mexico: { x: 1078, y: 660, labelDx: 30, labelDy: -4, labelAnchor: "start" },
+  "costa-rica": { x: 1035, y: 705, labelDx: 28, labelDy: 18, labelAnchor: "start" },
+  canada: { x: 985, y: 738, labelDx: 0, labelDy: 52, labelAnchor: "middle" },
 };
 
 // The routes are hand-authored in station order so the Career and Build lines read as timelines.
