@@ -21,7 +21,7 @@ const lineCodes: Record<LineId, string> = {
   "off-hours": "OFF",
 };
 
-const INTRO_SESSION_KEY = "portfolio-intro-v1";
+const INTRO_SESSION_KEY = "portfolio-intro-v2";
 
 const countryCards = [
   {
@@ -143,7 +143,7 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
             duration: playIntro ? 0.55 : 0,
-            delay: playIntro ? 0.28 : 0,
+            delay: playIntro ? 0.42 : 0,
             ease: "easeOut" as const,
           }}
         >
@@ -331,13 +331,13 @@ function ExpressTrainIntro({ playIntro }: { playIntro: boolean }) {
       aria-hidden="true"
       initial={{ opacity: 0 }}
       animate={{ opacity: [0, 1, 1, 0] }}
-      transition={{ duration: 1.08, times: [0, 0.08, 0.78, 1] }}
+      transition={{ duration: 1.72, times: [0, 0.05, 0.88, 1] }}
     >
       <motion.div
         className="express-train"
-        initial={{ x: "-38vw" }}
-        animate={{ x: "118vw" }}
-        transition={{ duration: 1.05, ease: "easeInOut" as const }}
+        initial={{ x: "-18vw" }}
+        animate={{ x: "112vw" }}
+        transition={{ duration: 1.62, ease: "easeInOut" as const }}
       >
         <div className="express-train-cab" />
         <div className="express-train-window express-train-window-1" />
