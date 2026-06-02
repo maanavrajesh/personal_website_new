@@ -788,7 +788,7 @@ button {
 .ticket-access-row {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 12px;
+  column-gap: 18px;
   row-gap: 9px;
   margin-top: 10px;
 }
@@ -799,8 +799,8 @@ button {
   justify-content: center;
   border: 1px solid var(--ticket-print);
   background-color: var(--ticket-cream);
-  min-width: 58px;
-  padding: 6px 9px;
+  min-width: 68px;
+  padding: 6px 11px;
   color: var(--ticket-print);
   font-size: 0.58rem;
   font-weight: 700;
