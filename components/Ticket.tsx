@@ -21,7 +21,7 @@ const lineCodes: Record<LineId, string> = {
   "off-hours": "OFF",
 };
 
-const INTRO_SESSION_KEY = "portfolio-intro-v2";
+const INTRO_SESSION_KEY = "portfolio-intro-v3";
 
 const countryCards = [
   {
