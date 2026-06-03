@@ -28,7 +28,7 @@ export function MobileLineIndex({
     : lines;
 
   return (
-    <section className="px-4 py-6 md:hidden">
+    <section className="mobile-line-index px-4 pb-6 pt-10 md:hidden">
       <div className="border-b border-[var(--ink)] pb-5">
         <h1 className="text-5xl font-bold leading-none">{copy.title}</h1>
         <p className="mono mt-3 text-xs uppercase text-[var(--muted-ink)]">

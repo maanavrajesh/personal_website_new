@@ -70,13 +70,13 @@ function Footer() {
   const copy = siteContent.footer;
 
   return (
-    <footer className="mono border-t border-[var(--ink)] bg-[var(--paper)] px-4 py-3 text-[0.68rem] uppercase text-[var(--muted-ink)] md:px-6">
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap gap-x-4 gap-y-1">
+    <footer className="site-footer mono border-t border-[var(--ink)] bg-[var(--paper)] px-4 py-3 text-[0.68rem] uppercase text-[var(--muted-ink)] md:px-6">
+      <div className="site-footer-inner flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="site-footer-copy flex flex-wrap gap-x-4 gap-y-1">
           <span>{copy.copyright}</span>
           <span>{copy.privacyNote}</span>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="site-footer-links">
           {siteContent.socialLinks.map((link) => (
             <a
               key={link.href}

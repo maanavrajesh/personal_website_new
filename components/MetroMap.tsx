@@ -30,7 +30,7 @@ export function MetroMap({
   const copy = siteContent.map;
 
   return (
-    <section className="min-h-screen px-[4vw] py-6">
+    <section className="metro-map-view min-h-screen px-[4vw] pb-6 pt-10">
       <div className="mb-5">
         <h1 className="text-6xl font-bold leading-none">{copy.title}</h1>
         <p className="mono mt-2 text-xs uppercase text-[var(--muted-ink)]">

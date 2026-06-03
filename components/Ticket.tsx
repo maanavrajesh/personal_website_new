@@ -206,7 +206,10 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
               <div className="ticket-gate-row" aria-label="Ticket line gates">
                 <a
                   href="#metro-map"
-                  onClick={() => onEnter()}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onEnter();
+                  }}
                   className="ticket-gate ticket-gate-primary"
                   aria-label={content.cta}
                 >
@@ -218,7 +221,10 @@ export function Ticket({ onEnter, reducedMotion }: TicketProps) {
                   <a
                     key={line.id}
                     href="#metro-map"
-                    onClick={() => onEnter(line.id)}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onEnter(line.id);
+                    }}
                     className="ticket-gate"
                     aria-label={`Open ${line.name}`}
                   >
